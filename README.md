@@ -1,32 +1,118 @@
-# React + TypeScript + Vite
+# MitraPulse
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+> VIT Mitra Daily Attendance Management Portal
 
-Currently, two official plugins are available:
+MitraPulse is a web-based attendance management system designed for **VIT Mitra** to simplify daily attendance tracking, student attendance viewing, attendance correction requests, and faculty-side attendance management.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The system is built with **React, TypeScript, Vite, Tailwind CSS, Firebase Authentication, and Cloud Firestore**.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 📌 Overview
 
-## Expanding the Oxlint configuration
+MitraPulse replaces manual attendance tracking with a centralized digital platform.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+The system supports two roles:
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+- **Student**
+- **Faculty**
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Students can securely log in, view their attendance records, and raise attendance correction requests.
+
+Faculty members can manage members, mark daily attendance, edit attendance, review correction requests, and view attendance summaries.
+
+Firebase acts as the backend platform, providing:
+
+- Authentication
+- Cloud Firestore database
+- Security Rules
+- Real-time data access
+
+---
+
+## ✨ Key Features
+
+### 🔐 Authentication
+
+- Firebase Email/Password Authentication
+- Student and Faculty login
+- Secure session persistence
+- Forgot Password functionality
+- Protected application routes
+- Role-based access control
+- No public signup or registration
+
+---
+
+### 👨‍🎓 Student Features
+
+Students can:
+
+- Login securely using their registered email
+- View their attendance
+- View day-wise attendance records
+- View attendance by:
+  - Day
+  - Week
+  - Month
+- View present and absent records
+- View attendance percentage
+- Raise attendance correction requests
+- Track correction request status
+- Logout securely
+
+Students cannot directly modify attendance records.
+
+---
+
+### 👩‍🏫 Faculty Features
+
+Faculty members can:
+
+- Login securely
+- Access the faculty dashboard
+- Mark daily attendance
+- Mark attendance for all applicable members
+- Edit attendance records
+- View attendance records
+- Filter members by team
+- Search members
+- Manage club members
+- View attendance summaries
+- Review attendance correction requests
+- Approve correction requests
+- Reject correction requests
+- Logout securely
+
+---
+
+## 🏢 Club Teams
+
+MitraPulse supports exactly four VIT Mitra teams:
+
+| Team | Team ID |
+|---|---|
+| Vibe Coding | `vibe-coding` |
+| AI | `ai` |
+| Marketing | `marketing` |
+| Industry Connect | `industry-connect` |
+
+Teams are used for member organization and filtering.
+
+They do **not** represent separate attendance sessions.
+
+---
+
+## 📊 Attendance System
+
+MitraPulse follows a centralized daily attendance model.
+
+There is:
+
+> **One attendance record set per day for all applicable active members.**
+
+Attendance statuses are:
+
+```text
+present
+absent
