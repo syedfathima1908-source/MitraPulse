@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isFaculty() {
+      return isAuthenticated() && getUserData().role == 'faculty';
+    }
+    
+    function isStudent() {
+      return isAuthenticated() && getUserData().role == 'student';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Default deny all documents
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // users collection
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isFaculty();
+      allow write: if isFaculty() || isOwner(uid);
+    }
+
+    // teams collection
+    match /teams/{teamId} {
+      allow read: if isAuthenticated();
+      allow write: if isFaculty();
+    }
+
+    // members collection
+    match /members/{memberId} {
+      allow read: if isFaculty() || isOwner(memberId);
+      allow write: if isFaculty();
+    }
+
+    // attendanceDays collection & subcollection records
+    match /attendanceDays/{date} {
+      allow read: if isAuthenticated();
+      allow write: if isFaculty();
+
+      match /records/{memberUid} {
+        allow read: if isFaculty() || isOwner(memberUid);
+        allow write: if isFaculty();
+      }
+    }
+
+    // attendanceCorrectionRequests collection
+    match /attendanceCorrectionRequests/{requestId} {
+      allow read: if isFaculty() || (isAuthenticated() && resource.data.studentUid == request.auth.uid);
+      allow create: if isStudent() && request.resource.data.studentUid == request.auth.uid && request.resource.data.status == 'pending';
+      allow update: if isFaculty();
+      allow delete: if false;
+    }
+  }
+}
